@@ -67,10 +67,13 @@ process makePDF {
     path "report.pdf"
 // Using the report template create a report, adding the counts at the end
   """
-  cp $projectDir/template.md report.md
+  cp $projectDir/templates/template.md report.md
+  cat template.md | sed -e 's/__PROJECTID__/${params.projectname}/g' > report.md
+  cat $csvfile | grep -v "^#" | sed -e 's/,/ |/g' | sed -e 's/^/| /g' | sed -e 's/\$/ |/g' >> report.md
+  pandoc -o report.pdf report.md
   """
 }
 	
 workflow {
-  downloadUrl | splitSequences | flatten | GCcount | collect | makeReport
+  downloadUrl | splitSequences | flatten | GCcount | collect | makeReport | makePDF
 }

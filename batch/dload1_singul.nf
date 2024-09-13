@@ -47,21 +47,6 @@ fastqutils stats $accession > ${accession.getSimpleName()}_stats.txt
 """
 }
 
-//process fast_qc {
- // publishDir params.out, mode:"copy", overwrite:true
- // container https://depot.galaxyproject.org/singularity/bioconductor-fastqcleaner%3A1.20.0--r43hf17093f_1
- // input:
- // path accession
- // output:
- // path "${accession.getSimpleName()}_fastqc.txt"
- // 
- // script:
- //   """
- //   fastqcleaner $accession > ${accession.getSimpleName()}_fastqc"
- //   """
-//}
-  
-  
 workflow {
     prefetchChannel=prefetchSRA(Channel.from(params.accession))
 	convertionChannel=convertToFastq(prefetchChannel)
